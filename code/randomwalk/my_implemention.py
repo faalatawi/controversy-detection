@@ -2,6 +2,7 @@ import networkx as nx
 from networkx import Graph
 import random
 import sys
+import logging
 from typing import Dict, Any, List, Tuple
 from enum import Enum, auto
 
@@ -159,26 +160,9 @@ def get_left_right_communities(communities_file: str) -> List[List[str], List[st
     return out
 
 
-if __name__ == "__main__":
-
-    # for testing and debuging. It's used if the user doesn't provide his arguments
-    graph_file = "political_blogs_largest_CC.txt"
-    communities_file = ""
-    precent = 0
-
-    if len(sys.argv) == 4:
-        graph_file = sys.argv[1]
-        communities_file = sys.argv[2]
-        percent = float(sys.argv[3])/100
-
-    # Read the graph
-    G = nx.read_weighted_edgelist(graph_file, delimiter=',')
-
-    # Get the left and right communities
-    [left, right] = get_left_right_communities(communities_file)
-
-    k_left = int(precent * len(left))
-    k_right = int(precent * len(right))
+def RWC(G, X, Y) -> float:
+    k_left = int(precent * len(X))
+    k_right = int(precent * len(Y))
 
     # start_end
     left_left = 0  # start at left ended at left
@@ -188,9 +172,9 @@ if __name__ == "__main__":
 
     for j in range(1, 1000):
         left_user_nodes = get_random_nodes_from_labels(
-            left, right, k=k_left, flag=LabelType.LEFT)  # TODO : return a list of nodes
+            X, Y, k=k_left, flag=LabelType.LEFT)  # TODO : return a list of nodes
         right_user_nodes = get_random_nodes_from_labels(
-            left, right, k=k_right, flag=LabelType.RIGHT)
+            X, Y, k=k_right, flag=LabelType.RIGHT)
         # Left community:
 
         K = None  # ! FIXME
@@ -230,3 +214,26 @@ if __name__ == "__main__":
     e4 = right_right * 1.0 / (left_right + right_right)
 
     score = e1*e4 - e2*e3
+
+    return score
+
+
+if __name__ == "__main__":
+
+    # for testing and debuging. It's used if the user doesn't provide his arguments
+    graph_file = "political_blogs_largest_CC.txt"
+    communities_file = ""
+    precent = 0
+
+    if len(sys.argv) == 4:
+        graph_file = sys.argv[1]
+        communities_file = sys.argv[2]
+        percent = float(sys.argv[3])/100
+
+    # Read the graph
+    G = nx.read_weighted_edgelist(graph_file, delimiter=',')
+
+    # Get the left and right communities
+    [left, right] = get_left_right_communities(communities_file)
+
+    score = RWC(G, left, right)
