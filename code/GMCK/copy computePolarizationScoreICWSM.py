@@ -7,28 +7,6 @@ import sys
 import networkx as nx
 import numpy as np
 
-filename = sys.argv[1]
-file2 = sys.argv[2]
-
-G = nx.read_weighted_edgelist(filename, delimiter=",")
-
-f1 = open("../communities_retweet_networks/community1_" + file2 + ".txt")
-#f1 = open("../communities_follow_networks/community1_" + file2 + ".txt");
-lines1 = f1.readlines()
-dict_left = {}
-
-for line in lines1:
-    line = line.strip()
-    dict_left[line] = 1
-
-f2 = open("../communities_retweet_networks/community2_" + file2 + ".txt")
-#f2 = open("../communities_follow_networks/community2_" + file2 + ".txt");
-lines2 = f2.readlines()
-dict_right = {}
-
-for line in lines2:
-    line = line.strip()
-    dict_right[line] = 1
 
 cut_nodes1 = {}
 cut_nodes = {}
@@ -66,7 +44,7 @@ for keys in cut_nodes1.keys():
         cut_nodes[keys] = 1
 
 for edge in G.edges():
-    #	print edge;
+    #	print edge
     node1 = edge[0]
     node2 = edge[1]
     # only consider edges involved in the cut
@@ -125,8 +103,8 @@ for edge in G.edges():
                 else:
                     dict_internal[node2] = 1
 
-# print dict_internal;
-# print dict_across;
+# print dict_internal
+# print dict_across
 
 polarization_score = 0.0
 lis1 = []
@@ -136,14 +114,39 @@ for keys in cut_nodes.keys():
         continue
     if(dict_across[keys] == 0 and dict_internal[keys] == 0):  # theres some problem
         print "wtf"
-#	print dict_internal[keys],dict_across[keys],(dict_internal[keys]*1.0/(dict_internal[keys] + dict_across[keys]) - 0.5),G.degree(keys);
+#	print dict_internal[keys],dict_across[keys],(dict_internal[keys]*1.0/(dict_internal[keys] + dict_across[keys]) - 0.5),G.degree(keys)
     polarization_score += (dict_internal[keys]*1.0 /
                            (dict_internal[keys] + dict_across[keys]) - 0.5)
 #	if(polarization_score==0.0):
-#		continue;
-#	lis1.append(polarization_score);
+#		continue
+#	lis1.append(polarization_score)
 
 polarization_score = polarization_score/len(cut_nodes.keys())
 print "********************" + file2 + "*********************"
 print polarization_score, "\n"
-# print np.mean(np.asarray(lis1)), np.median(np.asarray(lis1));
+# print np.mean(np.asarray(lis1)), np.median(np.asarray(lis1))
+
+
+if __name__ == '__main__':
+    filename = sys.argv[1]
+    file2 = sys.argv[2]
+
+    G = nx.read_weighted_edgelist(filename, delimiter=",")
+
+    f1 = open("../communities_retweet_networks/community1_" + file2 + ".txt")
+    # f1 = open("../communities_follow_networks/community1_" + file2 + ".txt")
+    lines1 = f1.readlines()
+    dict_left = {}
+
+       for line in lines1:
+            line = line.strip()
+            dict_left[line] = 1
+
+        f2 = open("../communities_retweet_networks/community2_" + file2 + ".txt")
+        # f2 = open("../communities_follow_networks/community2_" + file2 + ".txt")
+        lines2 = f2.readlines()
+        dict_right = {}
+
+        for line in lines2:
+            line = line.strip()
+            dict_right[line] = 1
