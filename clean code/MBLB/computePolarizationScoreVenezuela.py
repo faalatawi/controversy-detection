@@ -18,11 +18,11 @@ def Model(G, corenode, tol=10**-5, save_xi=True):
     # save_xi: boolean to save results
 
     N = len(G.nodes())
-#    print N
+#	print( N)
 
     # Get de adjacency matrix
     Aij = sp.lil_matrix((N, N))
-#    print Aij.shape
+#	print( Aij.shape)
     for o, d in G.edges():
         Aij[o, d] = 1
 
@@ -37,9 +37,9 @@ def Model(G, corenode, tol=10**-5, save_xi=True):
         v_new.append(0.0)
 
     v_current = 1.*np.array(v_current)
-#    f2 = open("analyze_venezuela/results_iter_0","wb");
+#	f2 = open("analyze_venezuela/results_iter_0","wb");
 #   pickle.dump(dict_nodes,f2);
-#    f2.close();
+#	f2.close();
     v_new = 1.*np.array(v_new)
 
     notconverged = len(v_current)
@@ -48,7 +48,7 @@ def Model(G, corenode, tol=10**-5, save_xi=True):
     # Do as many times as required for convergence
     while notconverged > 0:
         times = times+1
-        print >> sys.stderr, times
+        print(>> sys.stderr, times)
         t = time.time()
 
         # for all nodes apart from corenode, calculate opinion as average of neighbors
@@ -58,7 +58,7 @@ def Model(G, corenode, tol=10**-5, save_xi=True):
                 v_new[j] = np.mean(v_current[nodosin])
             else:
                 v_new[j] = v_current[j]
-#            nodos_changed[j]=nodos_changed[j] or (v_new[j]!=v_current[j])
+#			nodos_changed[j]=nodos_changed[j] or (v_new[j]!=v_current[j])
 
         # update opinion
         for j in corenode:
@@ -71,9 +71,9 @@ def Model(G, corenode, tol=10**-5, save_xi=True):
 #	for nodo in G.nodes():
 #		dict_nodes[G.node[nodo]['label']] = v_current[zz];
 #		zz += 1;
-#       f1=open("analyze_venezuela/results_iter_" + str(times),'wb')
-#	print v_current;
-#       pickle.dump(dict_nodes,f1)
+#	   f1=open("analyze_venezuela/results_iter_" + str(times),'wb')
+#	print( v_current;)
+#	   pickle.dump(dict_nodes,f1)
 #	f1.close();
 #
     return v_current
@@ -82,12 +82,12 @@ def Model(G, corenode, tol=10**-5, save_xi=True):
         for item in v_current:
             if(item == 0):
                 count_zeros += 1.0
-#	print "Not colored", count_zeros/len(G.nodes());
+#	print( "Not colored", count_zeros/len(G.nodes());)
         # Here you can update the Graph file and save it too. We just save the opinion vector.
-#       f=open("results_name",'wb')
-#	print v_current;
-#       pickle.dump(v_current,f)
-#        f.close()
+#	   f=open("results_name",'wb')
+#	print( v_current;)
+#	   pickle.dump(v_current,f)
+#		f.close()
 
 
 def GetPolarizationIndex(ideos):
@@ -129,4 +129,4 @@ for key in ideos.keys():
 v_current = Model(G, corenode)
 
 # v_current = pickle.load(open("results_name", "rb"));
-print file2, GetPolarizationIndex(v_current)
+print(file2, GetPolarizationIndex(v_current))
