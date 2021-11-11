@@ -1,5 +1,5 @@
 # Read a file
-file_name = "generateDataForVenezuelaPolarizationScore.py"
+file_name = "computePolarizationScoreEdgebetweenness.py"
 output = file_name[:-3] + "_clean.py"
 
 
